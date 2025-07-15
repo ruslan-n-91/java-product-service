@@ -11,6 +11,11 @@ import com.example.javaproductservice.model.Product;
 import com.example.javaproductservice.repository.ProductRepository;
 import com.example.javaproductservice.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -21,7 +26,9 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
+//    private final CacheManager cacheManager;
 
+    @Cacheable(value = "products_cache", key = "'allProducts'")
     @Override
     public List<GetProductResponseDto> findAllProducts() {
         return productRepository.findAll().stream()
@@ -29,6 +36,7 @@ public class ProductServiceImpl implements ProductService {
                 .toList();
     }
 
+    @Cacheable(value = "products_cache", key = "#productId")
     @Override
     public GetProductResponseDto findProductById(Long productId) {
         Product product = productRepository.findById(productId)
@@ -36,6 +44,12 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.mapToGetProductResponseDto(product);
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "products_cache", key = "'allProducts'"),
+            @CacheEvict(value = "products_cache", key = "#result.id")
+    })
+    //@CacheEvict(value = "products_cache", key = "#result.id")
+    //@CachePut(value = "products_cache", key = "#result.id")
     @Override
     public CreateProductResponseDto createProduct(CreateProductRequestDto requestDto) {
         Product product = createNewProduct(requestDto);
@@ -45,6 +59,11 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.mapToCreateProductResponseDto(product);
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "products_cache", key = "'allProducts'"),
+            @CacheEvict(value = "products_cache", key = "#result.id")
+    })
+    //@CachePut(value = "products_cache", key = "#orderId")
     @Override
     public UpdateProductResponseDto updateProduct(Long orderId, UpdateProductRequestDto requestDto) {
         Product product = productRepository.findById(orderId)
@@ -57,6 +76,10 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.mapToUpdateProductResponseDto(product);
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "products_cache", key = "'allProducts'"),
+            @CacheEvict(value = "products_cache", key = "#orderId")
+    })
     @Override
     public void deleteProduct(Long orderId) {
         Product product = productRepository.findById(orderId)

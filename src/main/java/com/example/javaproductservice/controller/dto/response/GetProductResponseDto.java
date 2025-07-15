@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serializable;
 import java.time.Instant;
 
 @Getter
@@ -15,7 +16,7 @@ import java.time.Instant;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetProductResponseDto {
+public class GetProductResponseDto implements Serializable {
     private Long id;
     private String productName;
     private String description;
