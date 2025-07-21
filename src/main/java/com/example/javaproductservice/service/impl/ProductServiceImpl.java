@@ -36,7 +36,7 @@ public class ProductServiceImpl implements ProductService {
                 .toList();
     }
 
-    @Cacheable(value = "products_cache", key = "#productId")
+    @Cacheable(value = "products_cache", key = "#productId", unless="#result == null")
     @Override
     public GetProductResponseDto findProductById(Long productId) {
         Product product = productRepository.findById(productId)
