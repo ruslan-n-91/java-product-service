@@ -28,7 +28,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductMapper productMapper;
 //    private final CacheManager cacheManager;
 
-    @Cacheable(value = "products_cache", key = "'allProducts'")
+//    @Cacheable(value = "products_cache", key = "'allProducts'")
     @Override
     public List<GetProductResponseDto> findAllProducts() {
         return productRepository.findAll().stream()
@@ -36,7 +36,7 @@ public class ProductServiceImpl implements ProductService {
                 .toList();
     }
 
-    @Cacheable(value = "products_cache", key = "#productId", unless="#result == null")
+//    @Cacheable(value = "products_cache", key = "#productId", unless="#result == null")
     @Override
     public GetProductResponseDto findProductById(Long productId) {
         Product product = productRepository.findById(productId)
@@ -44,10 +44,10 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.mapToGetProductResponseDto(product);
     }
 
-    @Caching(evict = {
-            @CacheEvict(value = "products_cache", key = "'allProducts'"),
-            @CacheEvict(value = "products_cache", key = "#result.id")
-    })
+//    @Caching(evict = {
+//            @CacheEvict(value = "products_cache", key = "'allProducts'"),
+//            @CacheEvict(value = "products_cache", key = "#result.id")
+//    })
     //@CacheEvict(value = "products_cache", key = "#result.id")
     //@CachePut(value = "products_cache", key = "#result.id")
     @Override
@@ -59,10 +59,10 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.mapToCreateProductResponseDto(product);
     }
 
-    @Caching(evict = {
-            @CacheEvict(value = "products_cache", key = "'allProducts'"),
-            @CacheEvict(value = "products_cache", key = "#result.id")
-    })
+//    @Caching(evict = {
+//            @CacheEvict(value = "products_cache", key = "'allProducts'"),
+//            @CacheEvict(value = "products_cache", key = "#result.id")
+//    })
     //@CachePut(value = "products_cache", key = "#orderId")
     @Override
     public UpdateProductResponseDto updateProduct(Long orderId, UpdateProductRequestDto requestDto) {
@@ -76,10 +76,10 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.mapToUpdateProductResponseDto(product);
     }
 
-    @Caching(evict = {
-            @CacheEvict(value = "products_cache", key = "'allProducts'"),
-            @CacheEvict(value = "products_cache", key = "#orderId")
-    })
+//    @Caching(evict = {
+//            @CacheEvict(value = "products_cache", key = "'allProducts'"),
+//            @CacheEvict(value = "products_cache", key = "#orderId")
+//    })
     @Override
     public void deleteProduct(Long orderId) {
         Product product = productRepository.findById(orderId)
